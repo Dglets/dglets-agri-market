@@ -49,13 +49,31 @@ function showToast(msg, duration = 4000) {
   setTimeout(() => t.classList.remove('show'), duration);
 }
 
-/* ── Save to localStorage ── */
+/* ── Config — paste your Google Apps Script Web App URL here ── */
+const SHEET_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+/* ── Save to localStorage (always runs as backup) ── */
 function saveSignup(data) {
   try {
     const list = JSON.parse(localStorage.getItem('dglets_signups') || '[]');
     list.push({ ...data, ts: new Date().toISOString() });
     localStorage.setItem('dglets_signups', JSON.stringify(list));
   } catch (_) {}
+}
+
+/* ── Send to Google Sheet ── */
+async function sendToSheet(data) {
+  if (!SHEET_URL || SHEET_URL === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') return;
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors', /* Apps Script requires no-cors */
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.warn('Sheet submission failed (data saved locally):', err);
+  }
 }
 
 /* ── Field helpers ── */
@@ -82,7 +100,7 @@ if (form) {
     f.addEventListener('change', () => clearError(f));
   });
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const name    = document.getElementById('ea-name');
     const email   = document.getElementById('ea-email');
@@ -101,27 +119,32 @@ if (form) {
     btn.textContent = 'Submitting…';
     btn.disabled = true;
 
-    saveSignup({
-      name: name.value.trim(),
-      email: email.value.trim(),
-      phone: document.getElementById('ea-phone').value.trim(),
-      role: role.value,
-      state: document.getElementById('ea-state').value,
-      lga: document.getElementById('ea-lga').value.trim(),
-    });
+    const payload = {
+      name:   name.value.trim(),
+      email:  email.value.trim(),
+      phone:  document.getElementById('ea-phone').value.trim(),
+      role:   role.value,
+      state:  document.getElementById('ea-state').value,
+      lga:    document.getElementById('ea-lga').value.trim(),
+      source: 'early-access-form',
+    };
 
-    setTimeout(() => {
-      form.style.display = 'none';
-      success.style.display = 'block';
-      showToast('🎉 You\'re on the early access list!');
-    }, 800);
+    /* Save locally as backup, then send to Google Sheet */
+    saveSignup(payload);
+    await sendToSheet(payload);
+
+    form.style.display = 'none';
+    success.style.display = 'block';
+    showToast('🎉 You\'re on the early access list!');
+    btn.textContent = 'Join Early Access';
+    btn.disabled = false;
   });
 }
 
 /* ── Footer notify ── */
 const notifyBtn = document.getElementById('notifyBtn');
 if (notifyBtn) {
-  notifyBtn.addEventListener('click', () => {
+  notifyBtn.addEventListener('click', async () => {
     const inp = document.getElementById('footer-email');
     if (!isEmail(inp.value)) {
       inp.style.borderColor = '#ef4444';
@@ -129,7 +152,9 @@ if (notifyBtn) {
       return;
     }
     inp.style.borderColor = '';
-    saveSignup({ email: inp.value.trim(), source: 'footer' });
+    const payload = { email: inp.value.trim(), source: 'footer-notify' };
+    saveSignup(payload);
+    await sendToSheet(payload);
     inp.value = '';
     notifyBtn.textContent = '✓ Subscribed!';
     notifyBtn.style.background = '#2d7a4f';
