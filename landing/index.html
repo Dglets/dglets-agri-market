@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DG-LETS Agri Market Place App — Connect. Trade. Grow.</title>
+  <meta name="description" content="DG-LETS Agri Market Place connects farmers, buyers, suppliers and service providers in one smart platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     NAVBAR
+════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+
+      <!-- Logo -->
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.5 2 5.5 4.5 5.5 8c0 2.5 1.5 4.5 3.5 5.5V20h6v-6.5C17 12.5 18.5 10.5 18.5 8c0-3.5-3-6-6.5-6zm-1 10.8V18h2v-5.2c-.3.1-.6.2-1 .2s-.7-.1-1-.2z"/></svg>
+        </div>
+        <div class="nav-logo-text">
+          <span class="logo-name">DG-LETS</span>
+          <span class="logo-sub">Agri Market Place App</span>
+        </div>
+      </a>
+
+      <!-- Links -->
+      <div class="nav-links">
+        <a href="#home" class="active">Home</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#categories">Categories</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+
+      <!-- Right CTA -->
+      <div class="nav-right">
+        <button class="btn-download" onclick="scrollToForm()">
+          📥 <span>Download App</span>
+        </button>
+        <span class="coming-soon-pill">Coming Soon</span>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#categories">Categories</a>
+      <a href="#about">About Us</a>
+      <a href="#contact">Contact Us</a>
+      <button class="btn-download" onclick="scrollToForm()">📥 Download App</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section class="hero" id="home">
+
+  <!-- LEFT: Form + Text -->
+  <div class="hero-left container" style="padding-right:0">
+    <h1 class="hero-brand-name">DG-LETS</h1>
+    <p class="hero-brand-sub">AGRI MARKET PLACE APP</p>
+    <p class="hero-tagline">Connect. Trade. Grow.</p>
+    <p class="hero-desc">
+      DG-LETS Agri Market Place connects farmers, buyers,<br>
+      suppliers and service providers in one smart platform.
+    </p>
+
+    <!-- App Coming Soon box -->
+    <div class="coming-soon-box">
+      <div class="cs-icon">
+        🛒
+        <span class="cs-badge">COMING<br>SOON</span>
+      </div>
+      <div class="cs-text">
+        <strong>APP COMING SOON!</strong>
+        <span>We are putting the finishing touches to bring<br>you the best agri-market experience.</span>
+      </div>
+    </div>
+
+    <!-- Early Access Form -->
+    <p class="ea-heading">Be the First to Get Early Access!</p>
+    <p class="ea-sub">Join our early access list and connect with<br>farmers, buyers and opportunities.</p>
+
+    <form class="ea-form" id="earlyAccessForm" novalidate>
+      <div class="form-row">
+        <span class="f-icon">👤</span>
+        <input type="text" id="ea-name" placeholder="Full Name" required />
+      </div>
+      <div class="form-row">
+        <span class="f-icon">✉️</span>
+        <input type="email" id="ea-email" placeholder="Email Address" required />
+      </div>
+      <div class="form-row">
+        <span class="f-icon">📞</span>
+        <input type="tel" id="ea-phone" placeholder="Phone Number" />
+      </div>
+      <div class="form-row">
+        <span class="f-icon">👥</span>
+        <select id="ea-role" required>
+          <option value="" disabled selected>I am a… (Farmer / Buyer / Supplier / Other)</option>
+          <option value="farmer">Farmer / Producer</option>
+          <option value="buyer">Buyer / Retailer</option>
+          <option value="supplier">Supplier / Trader</option>
+          <option value="haulage">Haulage / Logistics</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <span class="f-icon">📍</span>
+        <select id="ea-state">
+          <option value="" disabled selected>Select State</option>
+          <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option>
+          <option>Anambra</option><option>Bauchi</option><option>Bayelsa</option>
+          <option>Benue</option><option>Borno</option><option>Cross River</option>
+          <option>Delta</option><option>Ebonyi</option><option>Edo</option>
+          <option>Ekiti</option><option>Enugu</option><option>FCT Abuja</option>
+          <option>Gombe</option><option>Imo</option><option>Jigawa</option>
+          <option>Kaduna</option><option>Kano</option><option>Katsina</option>
+          <option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+          <option>Lagos</option><option>Nasarawa</option><option>Niger</option>
+          <option>Ogun</option><option>Ondo</option><option>Osun</option>
+          <option>Oyo</option><option>Plateau</option><option>Rivers</option>
+          <option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+          <option>Zamfara</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <span class="f-icon">🏘️</span>
+        <input type="text" id="ea-lga" placeholder="LGA (Local Government Area)" />
+      </div>
+
+      <div class="form-checkbox">
+        <input type="checkbox" id="ea-consent" required />
+        <label for="ea-consent">I agree to receive updates about DG-LETS</label>
+      </div>
+
+      <button type="submit" class="btn-join" id="ea-submit">Join Early Access</button>
+      <p class="form-privacy">🔒 We respect your privacy. No spam, ever.</p>
+    </form>
+
+    <!-- Success state -->
+    <div class="form-success" id="formSuccess">
+      <div class="s-icon">🎉</div>
+      <h4>You're on the list!</h4>
+      <p>We'll notify you as soon as DG-LETS launches in your state.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: Phone mockups on farm background -->
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <div class="hero-phones">
+
+      <!-- Back phone: Home screen -->
+      <div class="phone-wrap back">
+        <div class="phone-outer">
+          <div class="phone-screen">
+            <div class="p1-status">
+              <span>9:41</span>
+              <span>📶🔋</span>
+            </div>
+            <div class="p1-header">
+              <div class="welcome">Welcome to</div>
+              <div class="app-name">DG-LETS<br>AGRI MARKET</div>
+              <div class="p1-search">
+                <span>🔍</span>
+                <span style="font-size:.58rem;color:#9ca3af">Search for products…</span>
+                <div class="sq">🔍</div>
+              </div>
+            </div>
+            <div class="p1-banner">
+              <div class="b-label">Fresh Produce</div>
+              <div class="b-title">Direct from Farm</div>
+              <button class="b-btn">Shop Now</button>
+            </div>
+            <div class="p1-cats">
+              <div class="p1-cats-title"><span>Categories</span><span>See all</span></div>
+              <div class="p1-cats-row">
+                <div class="cat-chip"><div class="cc-icon">🌾</div><span>Crops</span></div>
+                <div class="cat-chip"><div class="cc-icon">🐄</div><span>Livestock</span></div>
+                <div class="cat-chip"><div class="cc-icon">🐓</div><span>Poultry</span></div>
+                <div class="cat-chip"><div class="cc-icon">🌿</div><span>Fertilizer</span></div>
+                <div class="cat-chip"><div class="cc-icon">⚙️</div><span>Machinery</span></div>
+              </div>
+            </div>
+            <div class="p1-prods">
+              <div class="p1-prods-title"><span>Popular Products</span><span>See all</span></div>
+              <div class="p1-prods-row">
+                <div class="prod-chip">
+                  <div class="pc-img">🍅</div>
+                  <div class="pc-name">Tomatoes</div>
+                  <div class="pc-price">₦200 /kg</div>
+                </div>
+                <div class="prod-chip">
+                  <div class="pc-img">🌽</div>
+                  <div class="pc-name">Maize</div>
+                  <div class="pc-price">₦400 /kg</div>
+                </div>
+                <div class="prod-chip">
+                  <div class="pc-img">🍠</div>
+                  <div class="pc-name">Yam</div>
+                  <div class="pc-price">₦1,500</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Front phone: My Orders -->
+      <div class="phone-wrap front">
+        <div class="phone-outer">
+          <div class="phone-screen">
+            <div class="p1-status">
+              <span>9:41</span>
+              <span>📶🔋</span>
+            </div>
+            <div class="p2-header">
+              <span>←</span>
+              <span>My Orders</span>
+            </div>
+            <div class="p2-body">
+              <div class="p2-title">Order Summary</div>
+              <div class="p2-item">
+                <span class="p2-item-name">🍅 Tomatoes</span>
+                <span class="p2-item-price">₦2,400</span>
+              </div>
+              <div class="p2-item">
+                <span class="p2-item-name">🌽 Maize</span>
+                <span class="p2-item-price">₦1,800</span>
+              </div>
+              <div class="p2-addr">
+                <div class="p2-addr-label">Delivery Address</div>
+                <div class="p2-addr-val">Benin City, Edo State</div>
+              </div>
+              <div class="p2-total">
+                <span>Total</span>
+                <strong>₦4,200</strong>
+              </div>
+              <button class="p2-btn">Place Order</button>
+            </div>
+            <div class="p2-nav">
+              <div class="nav-item"><span class="ni-icon">🏠</span><span>Home</span></div>
+              <div class="nav-item active"><span class="ni-icon">📋</span><span>Orders</span></div>
+              <div class="nav-item"><span class="ni-icon">💬</span><span>Chat</span></div>
+              <div class="nav-item"><span class="ni-icon">👤</span><span>Profile</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     BIG THINGS BANNER
+════════════════════════════════════ -->
+<div class="big-things-banner">
+  <div class="bt-left">
+    <span class="bt-icon">🌱</span>
+    <strong>BIG THINGS ARE GROWING!</strong>
+  </div>
+  <div class="bt-right">
+    While the app is on the way, our platform is already building strong connections<br>
+    between farmers, buyers, suppliers and service providers.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     STATUS BAR (4 columns)
+════════════════════════════════════ -->
+<div class="status-bar" id="features">
+  <div class="status-bar-inner" style="max-width:1200px;margin:0 auto">
+    <div class="status-col">
+      <span class="sc-icon">🤝</span>
+      <span class="sc-title">Farmers to Buyers</span>
+      <span class="sc-desc">Connecting quality produce to serious buyers.</span>
+      <span class="sc-badge on-way">ON THE WAY</span>
+    </div>
+    <div class="status-col">
+      <span class="sc-icon">🛠️</span>
+      <span class="sc-title">MVP Development</span>
+      <span class="sc-desc">Our Minimum Viable Product is in active development.</span>
+      <span class="sc-badge progress">IN PROGRESS</span>
+    </div>
+    <div class="status-col">
+      <span class="sc-icon">⚡</span>
+      <span class="sc-title">Platform Features</span>
+      <span class="sc-desc">Powerful features to simplify trade, payments and delivery.</span>
+      <span class="sc-badge coming">COMING SOON</span>
+    </div>
+    <div class="status-col">
+      <span class="sc-icon">🛡️</span>
+      <span class="sc-title">Trust &amp; Security</span>
+      <span class="sc-desc">Secure transactions and verified users for a safe experience.</span>
+      <span class="sc-badge priority">OUR PRIORITY</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     WHY CHOOSE DG-LETS
+════════════════════════════════════ -->
+<section class="why-section" id="how-it-works">
+  <div class="container">
+    <h2 class="why-heading">Why Choose DG-LETS?</h2>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon">🌐</div>
+        <h3>Wide Network</h3>
+        <p>Connect with thousands of buyers, sellers and service providers.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.07s">
+        <div class="why-icon">✅</div>
+        <h3>Quality Assured</h3>
+        <p>Access quality agricultural products and trusted vendors.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.14s">
+        <div class="why-icon">💳</div>
+        <h3>Secure Payments</h3>
+        <p>Enjoy safe and secure transactions on every deal.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.21s">
+        <div class="why-icon">🚚</div>
+        <h3>Fast Delivery</h3>
+        <p>Reliable delivery service from farm to your doorstep.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.28s">
+        <div class="why-icon">🎧</div>
+        <h3>24/7 Support</h3>
+        <p>Our support team is always ready to assist you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     BUILT FOR EVERYONE
+════════════════════════════════════ -->
+<section class="everyone-section" id="categories">
+  <div class="container">
+    <h2 class="everyone-heading">Built for Everyone in Agriculture</h2>
+    <div class="people-grid">
+
+      <div class="people-card fade-up">
+        <div class="people-avatar people-img-1">👨‍🌾</div>
+        <div class="people-card-overlay"></div>
+        <div class="people-card-label">
+          <strong>Farmers</strong>
+          <span>Sell your produce and reach more buyers.</span>
+        </div>
+      </div>
+
+      <div class="people-card fade-up" style="transition-delay:.08s">
+        <div class="people-avatar people-img-2">👩‍💼</div>
+        <div class="people-card-overlay"></div>
+        <div class="people-card-label">
+          <strong>Buyers</strong>
+          <span>Find quality products at the best prices.</span>
+        </div>
+      </div>
+
+      <div class="people-card fade-up" style="transition-delay:.16s">
+        <div class="people-avatar people-img-3">🏪</div>
+        <div class="people-card-overlay"></div>
+        <div class="people-card-label">
+          <strong>Suppliers</strong>
+          <span>List your products and grow your business.</span>
+        </div>
+      </div>
+
+      <div class="people-card fade-up" style="transition-delay:.24s">
+        <div class="people-avatar people-img-4">🚛</div>
+        <div class="people-card-overlay"></div>
+        <div class="people-card-label">
+          <strong>Service Providers</strong>
+          <span>Offer your services and get more clients.</span>
+        </div>
+      </div>
+
+      <div class="people-card fade-up" style="transition-delay:.32s">
+        <div class="people-avatar people-img-5">🌍</div>
+        <div class="people-card-overlay"></div>
+        <div class="people-card-label">
+          <strong>Everyone</strong>
+          <span>One app. Endless opportunities.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="footer" id="contact">
+  <div class="footer-top">
+
+    <!-- Col 1: Logo + tagline -->
+    <div class="footer-logo-col">
+      <div class="footer-logo">
+        <div class="fl-icon">🌾</div>
+        <div class="fl-text">
+          <span class="fl-name">DG-LETS</span>
+          <span class="fl-sub">Agri Market Place App</span>
+        </div>
+      </div>
+      <p class="footer-tagline">
+        The future of agriculture trade is here.<br>
+        The app is coming soon!<br>
+        Great things are on the way.
+      </p>
+      <span class="footer-coming-soon">COMING SOON</span>
+    </div>
+
+    <!-- Col 2: Description + checklist -->
+    <div class="footer-mid-col">
+      <p>
+        DG-LETS Agri Market Place connects farmers, buyers,<br>
+        suppliers and service providers in one smart platform.
+      </p>
+      <ul class="footer-checklist">
+        <li>Farmer to Buyer Connections</li>
+        <li>MVP Development in Progress</li>
+        <li>Secure &amp; Seamless Transactions</li>
+        <li>More Features Coming Soon</li>
+      </ul>
+    </div>
+
+    <!-- Col 3: Notify form + mini phone -->
+    <div class="footer-right-col">
+      <div class="footer-notify">
+        <p>Enter your email address to get notified when we launch.</p>
+        <div class="notify-row">
+          <input type="email" id="footer-email" placeholder="Enter your email address" />
+          <button type="button" id="notifyBtn">🔔 Notify Me</button>
+        </div>
+      </div>
+      <div class="footer-phone">
+        <div class="footer-phone-outer">
+          <div class="footer-phone-screen">
+            <div class="fps-header"><span>DG-LETS AGRI MARKET</span></div>
+            <div class="fps-body">
+              <div class="fps-row"><span>🍅 Tomatoes</span><strong>₦200/kg</strong></div>
+              <div class="fps-row"><span>🌽 Maize</span><strong>₦400/kg</strong></div>
+              <div class="fps-row"><span>🍠 Yam</span><strong>₦1,500</strong></div>
+              <div class="fps-row"><span>🫚 Ginger</span><strong>₦1,150/kg</strong></div>
+              <button class="fps-btn">Shop Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 DG-LETS Agri Market Place App. All rights reserved.</span>
+    <span class="footer-bottom-tagline">✦ DG-LETS… Empowering Agriculture. Building Tomorrow.</span>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span>🎉</span>
+  <span id="toastMsg">You're on the early access list!</span>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
