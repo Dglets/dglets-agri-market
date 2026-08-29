@@ -4,9 +4,13 @@
    ============================================================ */
 
 /* ── Config ── */
-var NOTIFY_EMAIL = Session.getActiveUser().getEmail(); /* sends to YOUR Google account email */
-var SHEET_NAME   = 'DG-LETS Early Access Signups';
+var NOTIFY_EMAIL = Session.getActiveUser().getEmail();
 var HEADERS      = ['Timestamp','Full Name','Email','Phone','Role','State','LGA','Source','User Agent'];
+
+/* getSheet() — always gets the active sheet from the bound spreadsheet */
+function getSheet() {
+  return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+}
 
 /* ── Auto-create styled headers ── */
 function ensureHeaders(sheet) {
@@ -85,7 +89,7 @@ function sendNotification(data, rowNum) {
 /* ── Handle POST — form submission ── */
 function doPost(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var sheet = getSheet();
     ensureHeaders(sheet);
     var data = JSON.parse(e.postData.contents);
 
@@ -124,7 +128,7 @@ function doPost(e) {
 
 /* ── Handle GET — health check ── */
 function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var sheet = getSheet();
   ensureHeaders(sheet);
   var count = Math.max(0, sheet.getLastRow() - 1);
   return ContentService
@@ -139,7 +143,7 @@ function doGet(e) {
 
 /* ── Manual test — run this inside Apps Script to verify email ── */
 function testSubmission() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var sheet = getSheet();
   ensureHeaders(sheet);
   var testData = {
     name: 'Test Farmer', email: 'test@dgletsagri.com',
