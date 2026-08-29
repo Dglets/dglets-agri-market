@@ -4,92 +4,64 @@
 'use strict';
 
 /* ══════════════════════════════════════
-   CONFIG — paste your Apps Script URL below after deploying
-   ══════════════════════════════════════ */
+   CONFIG
+══════════════════════════════════════ */
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxAF1cpyzA_xgqE0QGd37aJt36N1WxcqPf7eQq01wu-6KG6Wj1Wi397Ht4YJHIn9Cf2/exec';
+const WA_NUMBER = '2348070566642';
 
 /* ══════════════════════════════════════
-   GOOGLE SHEETS INTEGRATION
-   ══════════════════════════════════════ */
+   ROLE SWITCHING
+══════════════════════════════════════ */
+let currentRole = 'farmer';
 
-/* Send data to Google Sheet */
-async function sendToSheet(data) {
-  if (!SHEET_URL || SHEET_URL === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') {
-    console.info('[DG-LETS] Sheet URL not set — saved to localStorage only.');
-    return;
-  }
-  try {
-    await fetch(SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors', /* required by Apps Script */
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, userAgent: navigator.userAgent }),
-    });
-    console.info('[DG-LETS] Signup sent to Google Sheet ✓');
-  } catch (err) {
-    console.warn('[DG-LETS] Sheet send failed — data kept in localStorage:', err.message);
-  }
-}
+window.switchRole = function(role) {
+  currentRole = role;
 
-/* Verify the sheet URL is working (GET health check) */
-async function verifySheetConnection() {
-  if (!SHEET_URL || SHEET_URL === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') return;
-  try {
-    const res  = await fetch(SHEET_URL);
-    const json = await res.json();
-    if (json.status) {
-      console.info(`[DG-LETS] ✅ Sheet connected — "${json.sheet}" — ${json.signups} signup(s) so far`);
-      showToast(`✅ Sheet connected — ${json.signups} signup(s) recorded`);
-    }
-  } catch (err) {
-    console.warn('[DG-LETS] Sheet health check failed:', err.message);
-  }
-}
+  /* Update all role tabs everywhere on page */
+  document.querySelectorAll('.role-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.role === role);
+  });
 
-/* localStorage backup — always runs */
-function saveLocally(data) {
-  try {
-    const list = JSON.parse(localStorage.getItem('dglets_signups') || '[]');
-    list.push({ ...data, ts: new Date().toISOString() });
-    localStorage.setItem('dglets_signups', JSON.stringify(list));
-  } catch (_) {}
-}
+  /* Show correct form, hide others */
+  document.querySelectorAll('.ea-form').forEach(form => {
+    form.style.display = form.dataset.role === role ? 'flex' : 'none';
+  });
 
-/* View all locally saved signups in console */
-window.viewLocalSignups = function () {
-  const list = JSON.parse(localStorage.getItem('dglets_signups') || '[]');
-  console.table(list);
-  return list;
+  /* Hide success state if visible */
+  const success = document.getElementById('formSuccess');
+  if (success) success.style.display = 'none';
+};
+
+window.scrollToHeroForm = function() {
+  const el = document.getElementById('roleSelector');
+  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+};
+
+window.scrollToRegister = function() {
+  const el = document.getElementById('register');
+  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
 };
 
 /* ══════════════════════════════════════
    NAVBAR
-   ══════════════════════════════════════ */
+══════════════════════════════════════ */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   navbar.style.boxShadow = window.scrollY > 10 ? '0 2px 12px rgba(0,0,0,.1)' : '';
 }, { passive: true });
 
-/* ── Scroll to form ── */
-window.scrollToForm = function () {
-  const el = document.getElementById('earlyAccessForm');
-  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
-};
-
 /* ── Mobile menu ── */
-const hamburger = document.getElementById('hamburger');
+const hamburger  = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 hamburger.addEventListener('click', () => {
-  const open = mobileMenu.classList.toggle('open');
+  const open  = mobileMenu.classList.toggle('open');
   hamburger.setAttribute('aria-expanded', open);
   const spans = hamburger.querySelectorAll('span');
   if (open) {
     spans[0].style.cssText = 'transform:rotate(45deg) translate(5px,5px)';
     spans[1].style.cssText = 'opacity:0';
     spans[2].style.cssText = 'transform:rotate(-45deg) translate(5px,-5px)';
-  } else {
-    spans.forEach(s => s.style.cssText = '');
-  }
+  } else { spans.forEach(s => s.style.cssText = ''); }
 });
 mobileMenu.querySelectorAll('a').forEach(a => {
   a.addEventListener('click', () => {
@@ -100,7 +72,7 @@ mobileMenu.querySelectorAll('a').forEach(a => {
 
 /* ══════════════════════════════════════
    TOAST
-   ══════════════════════════════════════ */
+══════════════════════════════════════ */
 function showToast(msg, duration = 4500) {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
@@ -109,33 +81,172 @@ function showToast(msg, duration = 4500) {
 }
 
 /* ══════════════════════════════════════
-   FORM VALIDATION HELPERS
-   ══════════════════════════════════════ */
-function setError(input, msg) {
-  input.style.borderColor = '#ef4444';
-  let e = input.parentElement.querySelector('.field-error');
+   SHEET + LOCAL STORAGE
+══════════════════════════════════════ */
+async function sendToSheet(data) {
+  if (!SHEET_URL) return;
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, userAgent: navigator.userAgent })
+    });
+    console.info('[DG-LETS] Signup sent ✓', data.role);
+  } catch(err) {
+    console.warn('[DG-LETS] Sheet send failed:', err.message);
+  }
+}
+
+function saveLocally(data) {
+  try {
+    const list = JSON.parse(localStorage.getItem('dglets_signups') || '[]');
+    list.push({ ...data, ts: new Date().toISOString() });
+    localStorage.setItem('dglets_signups', JSON.stringify(list));
+  } catch(_) {}
+}
+
+/* View local signups from browser console */
+window.viewLocalSignups = () => {
+  const list = JSON.parse(localStorage.getItem('dglets_signups') || '[]');
+  console.table(list);
+  return list;
+};
+
+/* ══════════════════════════════════════
+   FORM VALIDATION
+══════════════════════════════════════ */
+function setError(el, msg) {
+  el.style.borderColor = '#ef4444';
+  let e = el.parentElement.querySelector('.field-error');
   if (!e) {
     e = document.createElement('span');
     e.className = 'field-error';
-    e.style.cssText = 'font-size:.72rem;color:#ef4444;margin-top:3px;display:block;';
-    input.parentElement.appendChild(e);
+    e.style.cssText = 'font-size:.72rem;color:#ef4444;margin-top:3px;display:block';
+    el.parentElement.appendChild(e);
   }
   e.textContent = msg;
 }
-function clearError(input) {
-  input.style.borderColor = '';
-  const e = input.parentElement.querySelector('.field-error');
+function clearError(el) {
+  el.style.borderColor = '';
+  const e = el.parentElement.querySelector('.field-error');
   if (e) e.remove();
 }
-function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+function isEmail(v)  { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+function isPhone(v)  { return /^[\d\s\+\-\(\)]{7,15}$/.test(v.trim()); }
+function val(id)     { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
 /* ══════════════════════════════════════
-   EARLY ACCESS FORM
-   ══════════════════════════════════════ */
-const form    = document.getElementById('earlyAccessForm');
-const success = document.getElementById('formSuccess');
+   COLLECT PAYLOAD BY ROLE
+══════════════════════════════════════ */
+function collectPayload(role) {
+  if (role === 'farmer') {
+    return {
+      role:         'farmer',
+      name:         val('f-name'),
+      phone:        val('f-phone'),
+      email:        val('f-email'),
+      state:        val('f-state'),
+      lga:          val('f-lga'),
+      farmLocation: val('f-farm-location'),
+      products:     val('f-products'),
+      capacity:     val('f-capacity'),
+      source:       'early-access-farmer'
+    };
+  }
+  if (role === 'buyer') {
+    return {
+      role:       'buyer',
+      name:       val('b-name'),
+      phone:      val('b-phone'),
+      email:      val('b-email'),
+      state:      val('b-state'),
+      lga:        val('b-lga'),
+      products:   val('b-products'),
+      frequency:  val('b-frequency'),
+      buyerType:  val('b-type'),
+      source:     'early-access-buyer'
+    };
+  }
+  if (role === 'supplier') {
+    return {
+      role:         'supplier',
+      name:         val('s-name'),
+      phone:        val('s-phone'),
+      email:        val('s-email'),
+      state:        val('s-state'),
+      products:     val('s-products'),
+      supplierType: val('s-type'),
+      source:       'early-access-supplier'
+    };
+  }
+  if (role === 'logistics') {
+    return {
+      role:        'logistics',
+      name:        val('l-name'),
+      phone:       val('l-phone'),
+      email:       val('l-email'),
+      state:       val('l-state'),
+      coverage:    val('l-coverage'),
+      vehicleType: val('l-vehicle-type'),
+      capacity:    val('l-capacity'),
+      source:      'early-access-logistics'
+    };
+  }
+  return {};
+}
 
-if (form) {
+/* ══════════════════════════════════════
+   VALIDATE BY ROLE
+══════════════════════════════════════ */
+function validateForm(role) {
+  let valid = true;
+  const ids = {
+    farmer:    { name:'f-name', phone:'f-phone', email:'f-email', products:'f-products', state:'f-state' },
+    buyer:     { name:'b-name', phone:'b-phone', email:'b-email', products:'b-products', state:'b-state' },
+    supplier:  { name:'s-name', phone:'s-phone', email:'s-email', products:'s-products', state:'s-state' },
+    logistics: { name:'l-name', phone:'l-phone', email:'l-email', state:'l-state' }
+  };
+  const f = ids[role];
+
+  const nameEl = document.getElementById(f.name);
+  if (!nameEl.value.trim() || nameEl.value.trim().length < 2) { setError(nameEl, 'Enter your name'); valid = false; } else clearError(nameEl);
+
+  const phoneEl = document.getElementById(f.phone);
+  if (!isPhone(phoneEl.value)) { setError(phoneEl, 'Enter a valid phone number'); valid = false; } else clearError(phoneEl);
+
+  if (f.email) {
+    const emailEl = document.getElementById(f.email);
+    if (!isEmail(emailEl.value)) { setError(emailEl, 'Enter a valid email or leave blank'); valid = false; } else clearError(emailEl);
+  }
+
+  const stateEl = document.getElementById(f.state);
+  if (!stateEl.value) { setError(stateEl, 'Please select your state'); valid = false; } else clearError(stateEl);
+
+  if (f.products) {
+    const prodEl = document.getElementById(f.products);
+    if (!prodEl.value.trim()) { setError(prodEl, 'Please fill this field'); valid = false; } else clearError(prodEl);
+  }
+
+  const consentId = role[0] + '-consent';
+  const consentEl = document.getElementById(consentId);
+  if (consentEl && !consentEl.checked) { setError(consentEl, 'Please agree to continue'); valid = false; } else if (consentEl) clearError(consentEl);
+
+  return valid;
+}
+
+/* ══════════════════════════════════════
+   FORM SUBMISSION HANDLER
+══════════════════════════════════════ */
+function buildWhatsAppMessage(payload) {
+  const roleLabels = { farmer:'Farmer', buyer:'Buyer', supplier:'Supplier', logistics:'Logistics Partner' };
+  const label = roleLabels[payload.role] || payload.role;
+  let msg = `Hello DG-LETS, I just registered as a ${label}!\n\nName: ${payload.name}\nPhone: ${payload.phone}\nState: ${payload.state}`;
+  if (payload.products) msg += `\nProducts: ${payload.products}`;
+  if (payload.coverage) msg += `\nCoverage: ${payload.coverage}`;
+  return encodeURIComponent(msg);
+}
+
+document.querySelectorAll('.ea-form').forEach(form => {
   /* Live clear errors */
   form.querySelectorAll('input, select').forEach(f => {
     f.addEventListener('input',  () => clearError(f));
@@ -144,108 +255,88 @@ if (form) {
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
+    const role = form.dataset.role;
+    if (!validateForm(role)) return;
 
-    const nameEl    = document.getElementById('ea-name');
-    const emailEl   = document.getElementById('ea-email');
-    const roleEl    = document.getElementById('ea-role');
-    const consentEl = document.getElementById('ea-consent');
-    let valid = true;
-
-    if (!nameEl.value.trim() || nameEl.value.trim().length < 2) {
-      setError(nameEl, 'Enter your full name'); valid = false;
-    } else clearError(nameEl);
-
-    if (!isEmail(emailEl.value)) {
-      setError(emailEl, 'Enter a valid email address'); valid = false;
-    } else clearError(emailEl);
-
-    if (!roleEl.value) {
-      setError(roleEl, 'Please select your role'); valid = false;
-    } else clearError(roleEl);
-
-    if (!consentEl.checked) {
-      setError(consentEl, 'Please agree to receive updates'); valid = false;
-    } else clearError(consentEl);
-
-    if (!valid) return;
-
-    /* Loading state */
-    const btn = document.getElementById('ea-submit');
+    const btn  = form.querySelector('button[type=submit]');
     const orig = btn.textContent;
     btn.textContent = 'Submitting…';
     btn.disabled = true;
 
-    const payload = {
-      name:   nameEl.value.trim(),
-      email:  emailEl.value.trim(),
-      phone:  document.getElementById('ea-phone').value.trim(),
-      role:   roleEl.value,
-      state:  document.getElementById('ea-state').value,
-      lga:    document.getElementById('ea-lga').value.trim(),
-      source: 'early-access-form',
-    };
-
-    /* Always save locally first */
+    const payload = collectPayload(role);
     saveLocally(payload);
-    /* Then send to Google Sheet */
     await sendToSheet(payload);
+
+    /* Track with GA */
+    if (typeof trackSignup === 'function') trackSignup(role);
 
     /* Show success */
     form.style.display = 'none';
-    success.style.display = 'block';
-    showToast('🎉 You\'re on the early access list!');
+    const successEl = document.getElementById('formSuccess');
+    const msgEl     = document.getElementById('successMessage');
+    const waBtn     = document.getElementById('successWhatsApp');
+
+    const msgs = {
+      farmer:    "You're registered as a Farmer. We'll be in touch when we launch in your state.",
+      buyer:     "You're registered as a Buyer. We'll notify you when DG-LETS launches near you.",
+      supplier:  "You're registered as a Supplier. We'll reach out when the platform launches.",
+      logistics: "You're registered as a Logistics Partner. We'll notify you about partnership opportunities."
+    };
+    if (msgEl) msgEl.textContent = msgs[role] || "We'll notify you when DG-LETS launches.";
+    if (waBtn) {
+      waBtn.href = `https://wa.me/${WA_NUMBER}?text=${buildWhatsAppMessage(payload)}`;
+    }
+    if (successEl) successEl.style.display = 'block';
+
+    showToast(`🎉 Welcome! You're registered as a ${payload.role}.`);
     btn.textContent = orig;
-    btn.disabled = false;
+    btn.disabled    = false;
   });
-}
+});
 
 /* ══════════════════════════════════════
-   FOOTER NOTIFY FORM
-   ══════════════════════════════════════ */
+   FOOTER NOTIFY
+══════════════════════════════════════ */
 const notifyBtn = document.getElementById('notifyBtn');
 if (notifyBtn) {
   notifyBtn.addEventListener('click', async () => {
     const inp = document.getElementById('footer-email');
-    if (!isEmail(inp.value)) {
+    if (!inp.value || !isEmail(inp.value)) {
       inp.style.borderColor = '#ef4444';
-      inp.placeholder = 'Enter a valid email address';
-      setTimeout(() => { inp.style.borderColor = ''; inp.placeholder = 'Enter your email address'; }, 3000);
+      setTimeout(() => inp.style.borderColor = '', 3000);
       return;
     }
     inp.style.borderColor = '';
-
-    const orig = notifyBtn.textContent;
-    notifyBtn.textContent = 'Sending…';
-    notifyBtn.disabled = true;
-
-    const payload = { email: inp.value.trim(), source: 'footer-notify' };
+    const payload = { role: 'general', email: inp.value.trim(), source: 'footer-notify' };
     saveLocally(payload);
     await sendToSheet(payload);
-
     inp.value = '';
-    notifyBtn.textContent = '✓ You\'re in!';
+    notifyBtn.textContent = '✓ Done!';
     notifyBtn.style.background = '#2d7a4f';
+    notifyBtn.disabled = true;
     showToast('📬 We\'ll notify you when we launch!');
-
-    setTimeout(() => {
-      notifyBtn.textContent = orig;
-      notifyBtn.style.background = '';
-      notifyBtn.disabled = false;
-    }, 5000);
+    setTimeout(() => { notifyBtn.textContent = '🔔 Notify Me'; notifyBtn.style.background = ''; notifyBtn.disabled = false; }, 5000);
   });
-
-  /* Allow Enter key in footer email input */
-  const footerEmailInp = document.getElementById('footer-email');
-  if (footerEmailInp) {
-    footerEmailInp.addEventListener('keydown', e => {
-      if (e.key === 'Enter') notifyBtn.click();
-    });
-  }
+  document.getElementById('footer-email')?.addEventListener('keydown', e => { if (e.key === 'Enter') notifyBtn.click(); });
 }
 
 /* ══════════════════════════════════════
+   SHEET HEALTH CHECK ON LOAD
+══════════════════════════════════════ */
+window.addEventListener('load', async () => {
+  if (!SHEET_URL) return;
+  try {
+    const res  = await fetch(SHEET_URL);
+    const json = await res.json();
+    if (json.status) {
+      console.info(`[DG-LETS] ✅ Sheet connected — total signups: ${json.total}`, json.counts);
+    }
+  } catch(_) {}
+});
+
+/* ══════════════════════════════════════
    SMOOTH SCROLL
-   ══════════════════════════════════════ */
+══════════════════════════════════════ */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
@@ -257,31 +348,13 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 /* ══════════════════════════════════════
-   FADE-UP ON SCROLL
-   ══════════════════════════════════════ */
-const fadeEls = document.querySelectorAll('.fade-up');
+   FADE-UP ANIMATIONS
+══════════════════════════════════════ */
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
-    });
-  }, { threshold: 0.12 });
-  fadeEls.forEach(el => io.observe(el));
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
 } else {
-  fadeEls.forEach(el => el.classList.add('visible'));
+  document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
 }
-
-/* ══════════════════════════════════════
-   PEOPLE CARDS → SCROLL TO FORM
-   ══════════════════════════════════════ */
-document.querySelectorAll('.people-card').forEach(card => {
-  card.addEventListener('click', () => scrollToForm());
-});
-
-/* ══════════════════════════════════════
-   AUTO-VERIFY SHEET ON PAGE LOAD
-   (only fires if SHEET_URL is set)
-   ══════════════════════════════════════ */
-window.addEventListener('load', () => {
-  verifySheetConnection();
-});
