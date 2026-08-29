@@ -30,7 +30,8 @@ function ensureHeaders(sheet) {
 
 function sendNotification(data, rowNum, spreadsheetId) {
   try {
-    var email   = Session.getActiveUser().getEmail();
+    var email   = 'dgletsagritech5@gmail.com'; /* hardcoded — Session.getActiveUser() returns empty for web app deployments */
+    Logger.log('Sending notification to: ' + email);
     var subject = '🌱 New DG-LETS Signup — ' + (data.name || 'Unknown') + ' (' + (data.role || '—') + ')';
     var sheetUrl = 'https://docs.google.com/spreadsheets/d/' + spreadsheetId;
 
