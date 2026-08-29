@@ -335,6 +335,8 @@ button, input, select, textarea { font-family: var(--font); }
 .social-icon.instagram:hover { transform: translateY(-2px); opacity: .85; }
 .social-icon.twitter    { background: #000; }
 .social-icon.twitter:hover { background: #333; transform: translateY(-2px); }
+.social-icon.tiktok     { background: #010101; }
+.social-icon.tiktok:hover { background: #333; transform: translateY(-2px); }
 
 .footer-mid-col { padding: 36px; border-right: 1px solid rgba(255,255,255,.1); }
 .footer-mid-col p { font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.65; margin-bottom: 18px; }
