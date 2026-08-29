@@ -6,7 +6,7 @@
 /* ══════════════════════════════════════
    CONFIG — paste your Apps Script URL below after deploying
    ══════════════════════════════════════ */
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxSSoMdAljEhC8EKeLCWq5Am9h9kMmAJrFocQOx5rdhDutATxs_BuHiJDF7webpbG6P/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxl8TAJm3Eu8E15iwOsqW7sFhSbQXN1gA4isWNaYeWteEvgn4dzLHc5bI493kss0ZFn/exec';
 
 /* ══════════════════════════════════════
    GOOGLE SHEETS INTEGRATION
