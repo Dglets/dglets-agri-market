@@ -6,7 +6,7 @@
 /* ══════════════════════════════════════
    CONFIG
 ══════════════════════════════════════ */
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxAF1cpyzA_xgqE0QGd37aJt36N1WxcqPf7eQq01wu-6KG6Wj1Wi397Ht4YJHIn9Cf2/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyqd46JMtB_OE0HTqAmpNiQECswBwVuBRz4rFlwhOd9Bhqb4zPsNGzRwCIou2kPx1bN/exec';
 const WA_NUMBER = '2348070566642';
 
 /* ══════════════════════════════════════
