@@ -29,8 +29,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--font); background: var(--white); color: var(--gray-900); line-height: 1.6; overflow-x: hidden; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { font-family: var(--font); background: var(--white); color: var(--gray-900); line-height: 1.6; overflow-x: hidden; max-width: 100vw; }
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
 button, input, select, textarea { font-family: var(--font); }
@@ -74,19 +74,19 @@ button, input, select, textarea { font-family: var(--font); }
   position: sticky; top: 0; z-index: 1000;
   transition: box-shadow .3s;
 }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; min-width: 0; }
+.nav-logo { display: flex; align-items: center; gap: 10px; min-width: 0; flex-shrink: 1; }
 .nav-logo-icon { width: 42px; height: 42px; background: var(--green-main); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .nav-logo-icon svg { width: 24px; height: 24px; fill: white; }
-.nav-logo-text .logo-name { font-size: 1rem; font-weight: 900; color: var(--green-dark); display: block; }
-.nav-logo-text .logo-sub  { font-size: .58rem; font-weight: 600; color: var(--gray-500); letter-spacing: .08em; text-transform: uppercase; display: block; }
+.nav-logo-text .logo-name { font-size: 1rem; font-weight: 900; color: var(--green-dark); display: block; white-space: nowrap; }
+.nav-logo-text .logo-sub  { font-size: .58rem; font-weight: 600; color: var(--gray-500); letter-spacing: .08em; text-transform: uppercase; display: block; white-space: nowrap; }
 .nav-links { display: flex; align-items: center; gap: 26px; }
 .nav-links a { font-size: .87rem; font-weight: 500; color: var(--gray-700); transition: color .2s; position: relative; padding-bottom: 3px; }
 .nav-links a:hover,
 .nav-links a.active { color: var(--green-main); }
 .nav-links a.active::after,
 .nav-links a:hover::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--green-main); border-radius: 2px; }
-.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .btn-whatsapp-nav {
   display: flex; align-items: center; gap: 7px;
   background: var(--wa-green); color: white;
@@ -110,11 +110,11 @@ button, input, select, textarea { font-family: var(--font); }
    HERO
 ══════════════════════════════════════ */
 .hero { background: var(--white); display: grid; grid-template-columns: 500px 1fr; min-height: calc(100vh - 68px); max-height: 920px; overflow: hidden; }
-.hero-left { padding: 48px 40px 48px 0; display: flex; flex-direction: column; justify-content: center; }
+.hero-left { padding: 48px 40px 48px 0; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 .hero-brand-name { font-size: 3.6rem; font-weight: 900; color: var(--green-dark); letter-spacing: -.04em; line-height: 1; margin-bottom: 2px; }
 .hero-brand-sub  { font-size: 1.4rem; font-weight: 800; color: var(--green-dark); margin-bottom: 10px; }
 .hero-tagline    { font-size: 1.25rem; font-weight: 800; color: var(--green-mid); margin-bottom: 12px; }
-.hero-desc       { font-size: .9rem; color: var(--gray-700); line-height: 1.65; margin-bottom: 20px; max-width: 420px; }
+.hero-desc       { font-size: .9rem; color: var(--gray-700); line-height: 1.65; margin-bottom: 20px; max-width: 420px; width: 100%; }
 
 /* Coming soon box */
 .coming-soon-box { background: var(--off-white); border: 1px solid var(--gray-100); border-radius: var(--radius-lg); padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
@@ -236,7 +236,7 @@ button, input, select, textarea { font-family: var(--font); }
 /* ══════════════════════════════════════
    BIG THINGS BANNER
 ══════════════════════════════════════ */
-.big-things-banner { background: var(--green-dark); color: white; padding: 22px 40px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.big-things-banner { background: var(--green-dark); color: white; padding: 22px 40px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; overflow: hidden; }
 .bt-left { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
 .bt-left .bt-icon { font-size: 1.4rem; }
 .bt-left strong { font-size: 1rem; font-weight: 800; letter-spacing: .02em; }
@@ -404,8 +404,14 @@ button, input, select, textarea { font-family: var(--font); }
   .status-bar-inner { grid-template-columns: repeat(2,1fr); }
   .register-inner { grid-template-columns: 1fr; gap: 40px; }
   .nav-links { display: none; }
-  .nav-right .btn-download span,
+  /* Hide everything in nav-right except the CTA button itself */
+  .nav-right .btn-whatsapp-nav { display: none; }
   .nav-right .coming-soon-pill { display: none; }
+  .nav-right .btn-download span { display: none; }
+  /* Logo sub-text stacks on small screens — hide it */
+  .nav-logo-text .logo-sub { display: none; }
+  /* Keep CTA button compact */
+  .nav-right .btn-download { padding: 8px 14px; font-size: .82rem; white-space: nowrap; }
   .hamburger { display: flex; }
   .big-things-banner { padding: 18px 20px; }
   .footer-top { grid-template-columns: 1fr; }
@@ -421,4 +427,63 @@ button, input, select, textarea { font-family: var(--font); }
   .role-tabs { display: grid; grid-template-columns: repeat(2,1fr); }
   .footer-bottom { flex-direction: column; text-align: center; padding: 16px 20px; }
   .big-things-banner { flex-direction: column; gap: 10px; }
+}
+
+/* ══════════════════════════════════════
+   MOBILE (≤ 480px) — tight phones
+══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+
+  /* Navbar — tighten further on very small screens */
+  .nav-inner { height: 60px; }
+  .nav-right .btn-download { padding: 7px 10px; font-size: .76rem; }
+
+  /* Hero */
+  .hero-left { padding: 28px 0; }
+  .hero-brand-name { font-size: 2.4rem; }
+  .hero-brand-sub  { font-size: 1.1rem; }
+  .hero-tagline    { font-size: 1.05rem; }
+  .hero-desc       { font-size: .85rem; max-width: 100%; }
+  .hero-right      { min-height: 300px; }
+
+  /* Coming soon box */
+  .coming-soon-box { padding: 12px 14px; gap: 10px; }
+  .cs-icon { width: 42px; height: 42px; font-size: 1.2rem; }
+
+  /* Role tabs: 2 columns */
+  .role-tabs { grid-template-columns: repeat(2, 1fr); }
+  .role-tab { font-size: .74rem; padding: 8px 4px; min-width: 0; }
+
+  /* Forms */
+  .form-row input,
+  .form-row select { font-size: .84rem; padding: 10px 10px 10px 34px; }
+  .btn-join { font-size: .88rem; padding: 12px; }
+
+  /* Sections */
+  .why-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .why-card { padding: 18px 12px; }
+  .people-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Status bar */
+  .status-bar-inner { grid-template-columns: 1fr; }
+  .status-col { padding: 18px 16px; }
+
+  /* Big things banner */
+  .big-things-banner { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+  .bt-left { justify-content: center; }
+
+  /* Register section */
+  .register-section { padding: 48px 0; }
+  .register-form-wrap { padding: 24px 16px; }
+
+  /* Footer */
+  .footer-logo-col { padding: 28px 16px; }
+  .footer-mid-col  { padding: 28px 16px; }
+  .footer-right-col { padding: 24px 16px 0; }
+  .notify-row input  { font-size: .82rem; }
+  .footer-bottom { padding: 14px 16px; font-size: .72rem; }
+
+  /* Toast */
+  .toast { right: 12px; left: 12px; max-width: none; bottom: 80px; }
 }

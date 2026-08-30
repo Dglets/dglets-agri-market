@@ -10,6 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* ── Mobile navbar override ── */
+    @media (max-width: 860px) {
+      .nav-cta-desktop          { display: none !important; }
+      .nav-logo-text .logo-sub  { display: none !important; }
+      .nav-links                { display: none !important; }
+      .hamburger                { display: flex !important; }
+      .btn-whatsapp-nav .nav-wa-label { display: none !important; }
+      .btn-whatsapp-nav { padding: 8px 10px !important; }
+      .nav-inner { height: 60px !important; }
+    }
+
     /* ── Founder page specific styles ── */
     .founder-hero {
       background: linear-gradient(160deg, #0f2d1a 0%, #1e5c3a 60%, #2d7a4f 100%);
@@ -302,6 +313,23 @@
       .founder-cta-form input  { border-right: 1px solid rgba(255,255,255,.2); border-radius: 10px 10px 0 0; border-bottom: none; }
       .founder-cta-form button { border-radius: 0 0 10px 10px; }
     }
+    @media (max-width: 480px) {
+      .founder-hero { padding: 80px 0 48px; }
+      .founder-hero h1 { font-size: 1.7rem; }
+      .founder-hero-desc { font-size: .92rem; }
+      .founder-avatar-wrap { gap: 12px; }
+      .founder-avatar { width: 64px; height: 64px; }
+      .founder-article { padding: 48px 0 72px; }
+      .founder-article .lead { font-size: 1rem; padding-left: 16px; }
+      .ecosystem-grid { grid-template-columns: 1fr; gap: 12px; }
+      .pull-quote { padding: 24px 18px; }
+      .pull-quote p { font-size: 1rem; }
+      .founder-cta { padding: 48px 0; }
+      .founder-cta h2 { font-size: 1.5rem; }
+      .founder-closing { padding: 24px 16px; }
+      .vision-list li { font-size: .9rem; }
+      .founder-section-title h2 { font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
@@ -330,10 +358,10 @@
         <a href="index.html#contact">Contact Us</a>
       </div>
       <div class="nav-right">
-        <button class="btn-download" onclick="window.location.href='index.html#early-access'">
+        <button class="btn-download nav-cta-desktop" onclick="window.location.href='index.html#early-access'">
           📥 <span>Get Early Access</span>
         </button>
-        <span class="coming-soon-pill">Coming Soon</span>
+        <span class="coming-soon-pill nav-cta-desktop">Coming Soon</span>
       </div>
       <button class="hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
